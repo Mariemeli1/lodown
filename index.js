@@ -1,6 +1,18 @@
 'use strict';
 
 // YOU KNOW WHAT TO DO //
+/**
+ * identity: Function take in any value and return the input value unchanged
+ * 
+ * @param {Any value} value: Function takes in any input value
+ * @return {Any value} : Function returns input value unchanged
+ */
+
+ function identity(value){
+    //returns input value unchanged
+    return value;
+}
+module.exports.identity = identity;
 
 /**
  * each: Designed to loop over a collection, Array or Object, and applies the 
@@ -22,3 +34,15 @@ function each(collection, action) {
     }
 }
 module.exports.each = each;
+/**
+ * identity: Designed to take in any value and return the value unchanged
+ * 
+ * @param {any value} value: The input value in which to return unchanged
+ * @return {value} : Return input value unchanged
+ */
+
+ function identity(value){
+    //returns input value unchanged
+    return value;
+}
+module.exports.identity = identity;
