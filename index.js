@@ -186,7 +186,7 @@ module.exports.each = each;
 * unique: Function that searches through an array of objects, and removing any duplicates
 * and returns a new array of all elements from array with duplicates removed.
 *
-* @param {array} array: Function takes in an array 
+* @param {array} array: Function takes in an array and iterates through it 
 * @return {array} newArr:Function returns a new array with duplicates removed
 *
 */
@@ -209,7 +209,7 @@ function unique(array){
 /**
  * filter: Function that creates a new array of elements for which calling function returned true
  * 
- * @param {array} array: Function takes in an array.
+ * @param {array} array: Function takes in an array and iterates through it.
  * @param {function} func: Function takes in a function to run for each array in element.
  * @return {array} arr: Function returns a new array containing all the array elements that pass the given condition.
  *  
@@ -233,7 +233,7 @@ module.exports.filter = filter;
 /**
  * reject: Function that creates a new array of elements for which calling function returned false
  * 
- * @param {array} array: Function takes in an array.
+ * @param {array} array: Function takes in an array and iterates through it.
  * @param {function} func: Function takes in a function to run for each array in element.
  * @return {array} arr: Function returns a new array containing all the array elements that do not pass the given condition.
  *  
@@ -340,3 +340,174 @@ function pluck(array, prop){
     return arr;
 }
 module.exports.pluck = pluck;
+
+/**
+ * every: Function that executes a function for each array element. Returns true if the function returns 
+ * true for all elements or returns false if the function returns false for one element
+ * 
+ * @param {collection} array or object: The input datatype that function iterates over.
+ * @param {function} func: Function to execute for each element in the array 
+ * @return {Boolean} Returns True or False
+ */
+function every(collection, func){
+    //determine if func was not passed in
+    if(func === undefined ){
+       //determine if collection is an array
+       if(Array.isArray(collection)){
+           //iterate through collections array
+           for(let i = 0; i < collection.length; i++){
+               //determine if collection[i] is false
+               if(collection[i] === false){
+                   //return false;
+                   return false;
+               }
+           }
+       } else { //else
+           //iterate through object
+           for(let key in collection){
+               //determine if collection[key] is false
+               if(collection[key] === false){
+                   //return false;
+                   return false;
+               }
+           }
+       }
+   
+   } else{ //else
+   //check if array is an array
+       if(Array.isArray(collection)){
+           //iterate through array
+           for(let i = 0; i < collection.length; i++){
+               //determine if calling func and passing in its current element, index and the array is false
+               if(func(collection[i], i, collection) === false){
+                   //return false
+                   return false;
+               }
+           }
+       } else{
+           //else its an object
+           //iterate through object usin a for in loop
+           for(let key in collection){
+               //determine if calling func and passing in its value, key and the object is false
+               if(func(collection[key], key, collection) === false){
+                   //return false
+                   return false;
+               }
+           }
+       }
+   }
+   //return true
+   return true;
+   }
+   module.exports.every = every;
+
+   /**
+    * some: Function that executes a function for each array element. returns true if the function returns
+    * true for one of the array elements or returns false if the function returns false for all of the array elements
+    * 
+    * @param {collection} array or object: The input datatype that function iterates over.
+    * @param {function} func: Function to execute for each element in the array 
+    * @return {Boolean} Returns True or False
+   */
+   function some(collection, func){
+    //determine if func was not passed in
+ if(func === undefined ){
+    //determine if collection is an array
+    if(Array.isArray(collection)){
+        //iterate through collections array
+        for(let i = 0; i < collection.length; i++){
+            //determine if collection[i] is true
+            if(collection[i] === true){
+                //return true;
+                return true;
+            }
+        }
+    } else { //else
+        //iterate through object
+        for(let key in collection){
+            //determine if collection[key] is true
+            if(collection[key] === true){
+                //return false;
+                return true;
+            }
+        }
+    }
+
+} else{ //else
+//check if array is an array
+    if(Array.isArray(collection)){
+        //iterate through array
+        for(let i = 0; i < collection.length; i++){
+            //determine if calling func and passing in its current element, index and the array is true
+            if(func(collection[i], i, collection) === true){
+                //return true
+                return true;
+            }
+        }
+    } else{
+        //else its an object
+        //iterate through object usin a for in loop
+        for(let key in collection){
+            //determine if calling func and passing in its value, key and the object is true
+            if(func(collection[key], key, collection) === true){
+                //return true
+                return true;
+            }
+        }
+    }
+}
+//return false
+return false;
+}
+module.exports.some = some;
+
+/**
+ * reduce: Function iterates through an array and calls a callback function each iteration to accumulate
+ * a single return value.
+ * 
+ * @param {array} array: The input array that function iterates through
+ * @param {function} func: Function to execute for each element in the array
+ * @return {Value} seed: Function returns accumulated value
+ */
+function reduce(arr, func, seed){
+    //create a result variable
+    let result;
+    //determine if seed was not given a value
+    if(seed === undefined){
+    //assign result value to first value in array
+    result = arr[0];
+    //iterate through input array starting at the 1 index
+        for(let i = 1; i < arr.length; i++){
+        //assign result to function call passing in previous result, element index, and the whole array
+       result = func(result, arr[i], i, arr);
+        }          //aka accumulator
+    } else {
+        //assign result to the seed value
+        result = seed;
+        //iterate through array
+        for(let i = 0; i < arr.length; i++){
+            //assign result to function call passing in previous result, element index, and the whole array
+            result = func(result, arr[i], i, arr);
+        }
+    }//return result
+    return result;
+}
+module.exports.reduce = reduce;
+
+/**
+ * extend: function is used to create a copy of all of the properties of the input objects over the
+ * final object and return the final object.
+ * 
+ * 
+ * @param {object} obj1 : Object used to push all other input objects inside of it
+ * @param {object} obj2 : Object pushed into obj1
+ * @param {object} output : Default parameter used to push object into obj1
+ * @returns {object} obj1: Returns an object with the other objects properties passed into it.
+ */
+function extend(obj1, obj2, output={}){
+    //create a variable holding object.assign that puts all input objects inside of it;
+    var obj1 = Object.assign(obj1, obj2, output);
+    //return updated obj1;
+    return obj1;
+    }
+module.exports.extend = extend;
